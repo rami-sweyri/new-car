@@ -1,0 +1,2 @@
+(this.webpackJsonpdashboard=this.webpackJsonpdashboard||[]).push([[23],{233:function(t,n,s){"use strict";s.r(n),s.d(n,"default",(function(){return u}));s(2);var a=s(88),r=s(3);function u(){return Object(r.jsx)(a.a,{})}}}]);
+//# sourceMappingURL=23.b52d1232.chunk.js.map

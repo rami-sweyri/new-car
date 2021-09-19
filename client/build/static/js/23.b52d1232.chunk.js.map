@@ -1,0 +1,1 @@
+{"version":3,"sources":["pages/Auth.js"],"names":["Login"],"mappings":"yGAAA,uEAGe,SAASA,IACtB,OAAO,cAAC,IAAD","file":"static/js/23.b52d1232.chunk.js","sourcesContent":["import React from 'react';\r\n\r\nimport Auth from '../components/Auth';\r\nexport default function Login() {\r\n  return <Auth />;\r\n}\r\n"],"sourceRoot":""}

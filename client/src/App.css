@@ -1,0 +1,149 @@
+.signIn {
+  z-index: 1;
+  transform: perspective(100px) translate3d(100px, 0px, -30px);
+  opacity: 0.5;
+}
+
+.signUp {
+  z-index: 2;
+}
+
+.active-dx {
+  animation-name: foregrounding-dx;
+  animation-duration: 0.9s;
+  animation-fill-mode: forwards;
+}
+
+.active-sx {
+  animation-name: foregrounding-sx;
+  animation-duration: 0.9s;
+  animation-fill-mode: forwards;
+}
+
+.inactive-dx {
+  animation-name: overshadowing-dx;
+  animation-duration: 0.9s;
+  animation-fill-mode: forwards;
+}
+
+.inactive-sx {
+  animation-name: overshadowing-sx;
+  animation-duration: 0.9s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes overshadowing-dx {
+  0% {
+    z-index: 3;
+    transform: perspective(100px) translate3d(0px, 0px, 0px);
+    opacity: 1;
+    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.25);
+  }
+  100% {
+    z-index: 1;
+    transform: perspective(100px) translate3d(100px, 0px, -30px);
+    opacity: 0.5;
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.25);
+    -webkit-transform: perspective(100px) translate3d(100px, 0px, -30px);
+    -moz-transform: perspective(100px) translate3d(100px, 0px, -30px);
+    -ms-transform: perspective(100px) translate3d(100px, 0px, -30px);
+    -o-transform: perspective(100px) translate3d(100px, 0px, -30px);
+  }
+}
+
+@keyframes overshadowing-sx {
+  0% {
+    z-index: 3;
+    transform: perspective(100px) translate3d(0px, 0px, 0px);
+    opacity: 1;
+    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.25);
+  }
+  100% {
+    z-index: 1;
+    transform: perspective(100px) translate3d(-100px, 0px, -30px);
+    opacity: 0.5;
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.25);
+  }
+}
+
+@keyframes foregrounding-dx {
+  0% {
+    z-index: 1;
+    transform: perspective(100px) translate3d(100px, 0px, -30px);
+    opacity: 0.5;
+  }
+  50% {
+    z-index: 2;
+    transform: perspective(100px) translate3d(400px, 0px, -30px);
+    -webkit-transform: perspective(100px) translate3d(400px, 0px, -30px);
+    -moz-transform: perspective(100px) translate3d(400px, 0px, -30px);
+    -ms-transform: perspective(100px) translate3d(400px, 0px, -30px);
+    -o-transform: perspective(100px) translate3d(400px, 0px, -30px);
+  }
+  100% {
+    z-index: 3;
+    transform: perspective(100px) translate3d(0px, 0px, 0px);
+    opacity: 1;
+  }
+}
+
+@keyframes foregrounding-sx {
+  0% {
+    z-index: 1;
+    transform: perspective(100px) translate3d(-100px, 0px, -30px);
+    opacity: 0.5;
+    -webkit-transform: perspective(100px) translate3d(-100px, 0px, -30px);
+    -moz-transform: perspective(100px) translate3d(-100px, 0px, -30px);
+    -ms-transform: perspective(100px) translate3d(-100px, 0px, -30px);
+    -o-transform: perspective(100px) translate3d(-100px, 0px, -30px);
+  }
+  50% {
+    z-index: 3;
+    transform: perspective(100px) translate3d(-400px, 0px, -30px);
+  }
+  100% {
+    z-index: 3;
+    transform: perspective(100px) translate3d(0px, 0px, 0px);
+    opacity: 1;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.loader {
+  border: 12px solid #f3f3f3; /* Light grey */
+  border-top: 12px solid #212121; /* Blue */
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(300deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

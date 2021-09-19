@@ -1,0 +1,2 @@
+(this.webpackJsonpdashboard=this.webpackJsonpdashboard||[]).push([[24],{234:function(e,s,t){"use strict";t.r(s),t.d(s,"default",(function(){return c}));t(2),t(16);var n=t(59),r=t(3);function c(){return Object(r.jsx)(n.a,{children:Object(r.jsx)("div",{className:" bg-white w-full h-screen flex justify-center items-center",children:"Dashboard"})})}}}]);
+//# sourceMappingURL=24.1c4a7478.chunk.js.map

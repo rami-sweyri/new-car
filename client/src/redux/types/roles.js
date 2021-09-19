@@ -1,0 +1,10 @@
+export const READ_ROLES = "READ_ROLES";
+export const READ_ONE_ROLE = "READ_ONE_ROLE";
+export const CREATE_ROLE = "CREATE_ROLE";
+export const UPDATE_ROLE = "UPDATE_ROLE";
+export const DELETE_ROLE = "DELETE_ROLE";
+export const SEARCH_ROLE_FILTER = "SEARCH_ROLE_FILTER";
+export const ROLE_ERROR = "ROLE_ERROR";
+export const CLEAR_ROLE = "CLEAR_ROLE";
+export const START_ROLES_RELOAD = "START_ROLES_RELOAD";
+export const FINISHED_ROLES_RELOAD = "FINISHED_ROLES_RELOAD";
