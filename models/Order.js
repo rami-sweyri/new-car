@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const User = require('./User');
-const Plan = require('./Plan');
-const Service = require('./Service');
-const { calculateService } = require('../utils/calculateService');
+const mongoose = require("mongoose");
+const User = require("./User");
+const Plan = require("./Plan");
+const Service = require("./Service");
+const { calculateService } = require("../utils/calculateService");
 
 const schema = new mongoose.Schema(
   {
@@ -11,18 +11,18 @@ const schema = new mongoose.Schema(
     },
     plan: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Plan',
+      ref: "Plan",
     },
     status: {
       type: String,
-      enum: ['declined', 'pending', 'cancelled', 'active'],
-      default: 'pending',
+      enum: ["declined", "pending", "cancelled", "active"],
+      default: "pending",
     },
     cars: [
       {
         carId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Car',
+          ref: "Car",
         },
         days: [
           {
@@ -37,7 +37,7 @@ const schema = new mongoose.Schema(
             },
             service: {
               type: mongoose.Schema.Types.ObjectId,
-              ref: 'Service',
+              ref: "Service",
             },
           },
         ],
@@ -48,7 +48,7 @@ const schema = new mongoose.Schema(
             },
             service: {
               type: mongoose.Schema.Types.ObjectId,
-              ref: 'Service',
+              ref: "Service",
             },
             days: [
               {
@@ -68,18 +68,18 @@ const schema = new mongoose.Schema(
       type: String,
     },
     expirationDate: { type: Date },
-    type: { type: String, enum: ['plan', 'oneTime'] },
+    type: { type: String, enum: ["plan", "oneTime"] },
     trace: {
       type: String,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     code: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
     },
     trash: {
@@ -92,14 +92,14 @@ const schema = new mongoose.Schema(
   }
 );
 
-schema.pre('save', async function preSaveFunction(error, doc, next) {
-  if (this.status === 'active') {
+schema.pre("save", async function preSaveFunction(error, doc, next) {
+  if (this.status === "active") {
     let order = this;
-    console.log('=======================');
-    console.log('set userServices to the order');
-    console.log('=======================');
+    console.log("=======================");
+    console.log("set userServices to the order");
+    console.log("=======================");
     let plan =
-      typeof order.plan !== 'undefined'
+      typeof order.plan !== "undefined"
         ? (await Plan.findById(order.plan)) !== null
           ? await Plan.findById(order.plan)
           : { services: [] }
@@ -117,7 +117,7 @@ schema.pre('save', async function preSaveFunction(error, doc, next) {
       var date = new Date();
       return date.setDate(date.getDate() + day);
     }
-    if (order.type === 'plan') {
+    if (order.type === "plan") {
       order.expirationDate = dateFromDay(plan.period);
     } else {
       order.expirationDate = dateFromDay(1);
@@ -127,5 +127,5 @@ schema.pre('save', async function preSaveFunction(error, doc, next) {
   }
 });
 
-const Order = mongoose.model('Order', schema);
+const Order = mongoose.model("Order", schema);
 module.exports = Order;

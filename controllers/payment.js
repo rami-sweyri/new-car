@@ -1,10 +1,10 @@
-const { default: axios } = require('axios');
-const Order = require('../models/Order');
-const jwt = require('jsonwebtoken');
-const request = require('request');
-const bcrypt = require('bcryptjs');
+const { default: axios } = require("axios");
+const Order = require("../models/Order");
+const jwt = require("jsonwebtoken");
+const request = require("request");
+const bcrypt = require("bcryptjs");
 
-require('dotenv').config();
+require("dotenv").config();
 
 exports.authorised = async (req, res) => {
   console.log({ req, res });
@@ -48,7 +48,7 @@ exports.authorised = async (req, res) => {
   </div>
   `);
 
-    if (order.status === 'active')
+    if (order.status === "active")
       return res.send(`
   <div
     style="
@@ -83,7 +83,7 @@ Your order already authorised!</h1>
   </div>
   `);
 
-    if (order.status !== 'pending')
+    if (order.status !== "pending")
       return res.send(`
   <div
     style="
@@ -154,18 +154,18 @@ Invalid code. please request a new one.    </h1>
   `);
 
     const token = jwt.sign({ _id: order.createdBy }, process.env.JWT_SECRET, {
-      expiresIn: '64d',
+      expiresIn: "64d",
     });
-    order.status = 'active';
-    order.code = '111111';
+    order.status = "active";
+    order.code = "111111";
     await order.save();
-    if (order.type === 'oneTime') {
+    if (order.type === "oneTime") {
       let currentDay = new Date().getDay();
 
       order.cars.map(car =>
         axios
           .post(
-            `${req.protocol + '://' + req.get('host')}/api/scheduled-wash`,
+            `${req.protocol + "://" + req.get("host")}/api/scheduled-wash`,
             {
               cars: order.cars
                 .filter(car =>
@@ -194,12 +194,12 @@ Invalid code. please request a new one.    </h1>
               date: new Date().setHours(new Date().getHours() + 9),
               order: order._id,
               day: currentDay,
-              type: 'oneTime',
+              type: "oneTime",
               createdBy: order.createdBy,
             },
             {
               headers: {
-                'x-access-token': token,
+                "x-access-token": token,
               },
             }
           )
@@ -327,7 +327,7 @@ exports.declined = async (req, res) => {
   </div>
       `);
 
-    order.status = 'declined';
+    order.status = "declined";
     await order.save();
     res.send(`
 <div
@@ -444,7 +444,7 @@ exports.cancelled = async (req, res) => {
   </div>
       `);
 
-    order.status = 'cancelled';
+    order.status = "cancelled";
     await order.save();
     res.send(`
 <div
@@ -524,12 +524,13 @@ exports.cancelled = async (req, res) => {
 exports.unsubscribe = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    order.status = 'cancelled';
-
+    order.status = "cancelled";
+    await order.save();
+    console.log({ order });
     const resp = await axios.post(
-      'https://secure.telr.com/gateway/order.json',
+      "https://secure.telr.com/gateway/order.json",
       {
-        method: 'check',
+        method: "check",
         store: process.env.TELR_STORE_ID,
         authkey: process.env.TELR_STORE_AUTHKEY,
         order: {
@@ -537,9 +538,10 @@ exports.unsubscribe = async (req, res) => {
         },
       }
     );
+    console.log({ resp: resp.data.order.status });
     if (
       resp.data.order.status.code === -1 ||
-      typeof resp.data.order.transaction.ref === 'undefined'
+      typeof resp.data.order.transaction.ref === "undefined"
     ) {
       return;
     }
@@ -547,11 +549,11 @@ exports.unsubscribe = async (req, res) => {
 
     request.post(
       {
-        url: 'https://secure.telr.com/gateway/remote.xml',
+        url: "https://secure.telr.com/gateway/remote.xml",
         port: 9000,
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/xml',
+          "Content-Type": "application/xml",
         },
         body: `<?xml version="1.0" encoding="UTF-8"?>
 <remote>
@@ -580,27 +582,26 @@ exports.unsubscribe = async (req, res) => {
 
         if (
           response.statusCode === 200 &&
-          JSON.stringify(body).includes('Authorised')
+          JSON.stringify(body).includes("Authorised")
         ) {
           console.log({ statusCode: response.statusCode, body, order });
 
-          // await order.save();
           console.log({ order });
         }
         console.log({ order2: order, body: JSON.stringify(body) });
       }
     );
-
+    await order.save();
     res.status(200).send({
       data: order,
-      message: 'Orders successfully cancelled',
-      status: 'success',
+      message: "Orders successfully cancelled",
+      status: "success",
     });
   } catch (error) {
     console.log({ error });
     res.status(error.status || 500).send({
-      message: 'Something went wrong. please try again later',
-      status: 'error',
+      message: "Something went wrong. please try again later",
+      status: "error",
     });
   }
 };
