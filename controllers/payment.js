@@ -525,7 +525,7 @@ exports.unsubscribe = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     order.status = "cancelled";
-    await order.save();
+    order.code = "111111";
     console.log({ order });
     const resp = await axios.post(
       "https://secure.telr.com/gateway/order.json",
