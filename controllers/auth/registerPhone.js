@@ -33,20 +33,25 @@ module.exports.registerPhone = async (req, res) => {
       let filteredUser = updatedUser.toObject();
       delete filteredUser.password;
       delete filteredUser.confirmationCode;
-      let path =
+      let path = encodeURI(
         "https://globalsms.edsfze.com:1010/API//SendSMS?username=Edssample&apiId=fj3KO2Wc&json=True&destination=" +
-        filteredUser.phone
-          .trim()
-          .replace("+", "")
-          .replace("00971", "971")
-          .replace("97105", "9715") +
-        "&source=AD-OGLE&text=" +
-        confirmationCode;
+          filteredUser.phone
+            .trim()
+            .replace("+", "")
+            .replace("00971", "971")
+            .replace("97105", "9715")
+            .replace(/%20/g, "")
+      );
+      "&source=AD-OGLE&text=" + confirmationCode;
+      console.log({
+        path1: path,
+        path2: encodeURI(path),
+        path3: decodeURI(path),
+      });
 
       axios
-        .get(encodeURI(path))
+        .get(path)
         .then(result => {
-          console.log({ result });
           if (result.data.ErrorCode !== 0) {
             return res.status(500).send({
               data: filteredUser,

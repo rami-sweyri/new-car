@@ -1,10 +1,10 @@
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
 
 const options = {
   errors: {
     wrap: {
-      label: '',
+      label: "",
     },
   },
 };
@@ -23,7 +23,7 @@ const options = {
 // });
 
 const createOrderSchema = Joi.object().keys({
-  type: Joi.string().valid('oneTime', 'plan').required(),
+  type: Joi.string().valid("oneTime", "plan").required(),
   price: Joi.number().required(),
   cars: Joi.array().items(
     Joi.object({
@@ -31,6 +31,7 @@ const createOrderSchema = Joi.object().keys({
         Joi.object({
           count: Joi.number(),
           service: Joi.objectId(),
+          days: Joi.array().items(Joi.number()),
         })
       ),
       days: Joi.array().items(Joi.number()),
@@ -42,7 +43,7 @@ const createOrderSchema = Joi.object().keys({
 });
 
 const updateOrderSchema = Joi.object({
-  type: Joi.string().valid('oneTime', 'plan'),
+  type: Joi.string().valid("oneTime", "plan"),
   price: Joi.number(),
   plan: Joi.objectId(),
   cars: Joi.array().items(

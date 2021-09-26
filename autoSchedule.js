@@ -1,20 +1,20 @@
-const cron = require('node-cron');
-const Order = require('./models/Order');
-const ScheduledWash = require('./models/ScheduledWash');
+const cron = require("node-cron");
+const Order = require("./models/Order");
+const ScheduledWash = require("./models/ScheduledWash");
 
-module.exports = cron.schedule('00 00 1 * * *', async () => {
-  console.log('==============================');
-  console.log('running a autoSchedule every 5 second');
-  console.log('==============================');
+module.exports = cron.schedule("00 00 1 * * *", async () => {
+  console.log("==============================");
+  console.log("running a autoSchedule every 5 second");
+  console.log("==============================");
 
   // let currentDay = new Date().getDay();
   let currentDay = new Date().getDay();
 
   const orders = await Order.find({
-    type: { $in: ['plan'] },
-    status: { $in: ['active'] },
+    type: { $in: ["plan"] },
+    status: { $in: ["active"] },
     expirationDate: { $gte: new Date() },
-    'cars.days': { $in: [currentDay] },
+    "cars.days": { $in: [currentDay] },
   });
   if (orders.length > 0) {
     try {
@@ -41,7 +41,7 @@ module.exports = cron.schedule('00 00 1 * * *', async () => {
                   }),
               };
             }),
-          type: 'plan',
+          type: "plan",
           day: currentDay,
           date: new Date().setHours(new Date().getHours() + 9),
           order: order._id,
@@ -53,8 +53,8 @@ module.exports = cron.schedule('00 00 1 * * *', async () => {
       });
     } catch (error) {
       res.status(error.status || 500).send({
-        message: 'Something went wrong. please try again later',
-        status: 'error',
+        message: "Something went wrong. please try again later",
+        status: "error",
       });
     }
   } else {

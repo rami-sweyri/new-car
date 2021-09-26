@@ -1,8 +1,8 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../../models/User');
-const { loginValidate } = require('../../validation/auth');
-require('dotenv').config();
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../../models/User");
+const { loginValidate } = require("../../validation/auth");
+require("dotenv").config();
 
 module.exports.login = async (req, res) => {
   /*** Error Validation **/
@@ -10,17 +10,17 @@ module.exports.login = async (req, res) => {
   if (error)
     return res.status(400).send({
       message: error.details[0].message,
-      status: 'error',
+      status: "error",
     });
   try {
     const user = await User.findOne({ email: req.body.email }).select(
-      '+password'
+      "+password"
     );
 
     if (!user)
       return res.status(404).send({
         message: "User doesn't exist",
-        status: 'error',
+        status: "error",
       });
 
     /*** Check status **/
@@ -38,13 +38,13 @@ module.exports.login = async (req, res) => {
     );
     if (!validPassword)
       return res.status(400).send({
-        message: 'Invalid password',
-        status: 'error',
+        message: "Invalid password",
+        status: "error",
       });
 
     /*** Build Token  **/
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '64d',
+      expiresIn: "64d",
     });
 
     let filteredUser = user.toObject();
@@ -52,18 +52,18 @@ module.exports.login = async (req, res) => {
     delete filteredUser.confirmationCode;
 
     res
-      .header('x-access-token', token)
+      .header("x-access-token", token)
       .status(200)
       .send({
-        data: { ...filteredUser, 'x-access-token': token },
-        message: 'You have successfully logged in',
-        status: 'success',
+        data: { ...filteredUser, "x-access-token": token },
+        message: "You have successfully logged in",
+        status: "success",
       });
   } catch (error) {
     console.log({ error });
     res.status(error.status || 500).send({
-      message: 'Something went wrong. please try again later',
-      status: 'error',
+      message: "Something went wrong. please try again later",
+      status: "error",
     });
   }
 };

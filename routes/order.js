@@ -1,49 +1,49 @@
-const { Router } = require('express');
-const checkPermissions = require('../middleware/checkPermissions');
-const isAuthenticated = require('../middleware/isAuthenticated');
-const orderController = require('../controllers/order');
+const { Router } = require("express");
+const checkPermissions = require("../middleware/checkPermissions");
+const isAuthenticated = require("../middleware/isAuthenticated");
+const orderController = require("../controllers/order");
 const router = Router();
 
 router.post(
-  '/',
+  "/",
   isAuthenticated,
-  checkPermissions(['createOrder']),
+  // checkPermissions(['createOrder']),
   orderController.create
 );
 router.get(
-  '/',
+  "/",
   isAuthenticated,
-  checkPermissions(['findOrders']),
+  checkPermissions(["findOrders"]),
   orderController.find
 );
 router.get(
-  '/all',
+  "/all",
   isAuthenticated,
-  checkPermissions(['findAllOrders']),
+  checkPermissions(["findAllOrders"]),
   orderController.findAll
 );
 router.get(
-  '/me',
+  "/me",
   isAuthenticated,
-  checkPermissions(['findMeOrders']),
+  checkPermissions(["findMeOrders"]),
   orderController.findMe
 );
 router.get(
-  '/:id',
+  "/:id",
   isAuthenticated,
-  checkPermissions(['findOneOrder']),
+  checkPermissions(["findOneOrder"]),
   orderController.findOne
 );
 router.patch(
-  '/:id',
+  "/:id",
   isAuthenticated,
-  checkPermissions(['updateOrder']),
+  checkPermissions(["updateOrder"]),
   orderController.update
 );
 router.delete(
-  '/:id',
+  "/:id",
   isAuthenticated,
-  checkPermissions(['deleteOrder']),
+  checkPermissions(["deleteOrder"]),
   orderController.delete
 );
 

@@ -3,6 +3,7 @@ const Order = require("../models/Order");
 const jwt = require("jsonwebtoken");
 const request = require("request");
 const bcrypt = require("bcryptjs");
+const ScheduledWash = require("../models/ScheduledWash");
 
 require("dotenv").config();
 
@@ -160,56 +161,97 @@ Invalid code. please request a new one.    </h1>
     order.code = "111111";
     await order.save();
     if (order.type === "oneTime") {
+      console.log("sssssssssssssssssssssssssssssssssssssssssssssss");
       let currentDay = new Date().getDay();
-
-      order.cars.map(car =>
-        axios
-          .post(
-            `${req.protocol + "://" + req.get("host")}/api/scheduled-wash`,
-            {
-              cars: order.cars
-                .filter(car =>
-                  car.userServices.some(
-                    userService =>
-                      userService.days.includes(currentDay) &&
-                      userService.count > 0
-                  )
-                )
-                .map(car => {
-                  return {
-                    carId: car.carId,
-                    services: car.userServices
-                      .filter(userService => userService.count > 0)
-                      .filter(userService =>
-                        userService.days.includes(currentDay)
-                      )
-                      .map(userService => {
-                        return {
-                          service: userService.service,
-                          count: 1,
-                        };
-                      }),
-                  };
-                }),
-              date: new Date().setHours(new Date().getHours() + 9),
-              order: order._id,
-              day: currentDay,
-              type: "oneTime",
-              createdBy: order.createdBy,
-            },
-            {
-              headers: {
-                "x-access-token": token,
-              },
-            }
-          )
-          .then(result => {
-            // console.log({ result });
-          })
-          .catch(err => {
-            console.log({ err });
-          })
-      );
+      console.log({
+        url: `${req.protocol + "://" + req.get("host")}/api/scheduled-wash`,
+      });
+      try {
+        const scheduledWash = new ScheduledWash({
+          cars: order.cars
+            .filter(car =>
+              car.userServices.some(
+                userService =>
+                  userService.days.includes(currentDay) && userService.count > 0
+              )
+            )
+            .map(car => {
+              return {
+                carId: car.carId,
+                services: car.userServices
+                  .filter(userService => userService.count > 0)
+                  .filter(userService => userService.days.includes(currentDay))
+                  .map(userService => {
+                    return {
+                      service: userService.service,
+                      count: userService.count,
+                    };
+                  }),
+              };
+            }),
+          type: "oneTime",
+          day: currentDay,
+          date: new Date().setHours(new Date().getHours() + 9),
+          order: order._id,
+          createdBy: order.createdBy,
+        });
+        if (scheduledWash.cars.length > 0) {
+          await scheduledWash.save();
+        }
+      } catch (error) {
+        res.status(error.status || 500).send({
+          message: "Something went wrong. please try again later",
+          status: "error",
+        });
+      }
+      // order.cars.map(car =>
+      //   axios
+      //     .post(
+      //       `${req.protocol + "://" + req.get("host")}/api/scheduled-wash`,
+      //       {
+      //         cars: order.cars
+      //           .filter(car =>
+      //             car.userServices.some(
+      //               userService =>
+      //                 userService.days.includes(currentDay) &&
+      //                 userService.count > 0
+      //             )
+      //           )
+      //           .map(car => {
+      //             return {
+      //               carId: car.carId,
+      //               services: car.userServices
+      //                 .filter(userService => userService.count > 0)
+      //                 .filter(userService =>
+      //                   userService.days.includes(currentDay)
+      //                 )
+      //                 .map(userService => {
+      //                   return {
+      //                     service: userService.service,
+      //                     count: 1,
+      //                   };
+      //                 }),
+      //             };
+      //           }),
+      //         date: new Date().setHours(new Date().getHours() + 9),
+      //         order: order._id,
+      //         day: currentDay,
+      //         type: "oneTime",
+      //         createdBy: order.createdBy,
+      //       },
+      //       {
+      //         headers: {
+      //           "x-access-token": token,
+      //         },
+      //       }
+      //     )
+      //     .then(result => {
+      //       console.log({ result });
+      //     })
+      //     .catch(err => {
+      //       console.log({ err });
+      //     })
+      // );
     }
 
     res.send(`
